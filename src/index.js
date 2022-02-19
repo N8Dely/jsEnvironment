@@ -1,6 +1,6 @@
 import './index.css';
 
-import { getUsers } from './api/userApi';
+import { deleteUser, getUsers } from './api/userApi';
 
 // Populate table of user via API call
 getUsers().then(result => {
@@ -17,4 +17,18 @@ getUsers().then(result => {
   });
 
   global.document.getElementById('users').innerHTML = usersBody;
+
+  const deleteLinks = global.document.getElementsByClassName('deleteUser');
+
+  // Must use array.from to create a real array from a DOM collection
+  // getElementByClassname only returns an "array like" object
+  Array.from,(deleteLinks, link => {
+    link.onlclick = function(event) {
+      const element = event.target;
+      event.preventDefault();
+      deleteUser(element.attribute["data-id"].value);
+      const row = element.parentNode.parentNode;
+      row.parentNode.removeChhild(row);
+    };
+  })
 });
